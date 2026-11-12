@@ -10,7 +10,7 @@ def conservation_topic(message: str) -> str | None:
     topics = [
         ("protected_species", ("protected", "endangered", "threatened", "red list", "release alive", "rare species")),
         ("bycatch", ("bycatch", "discard", "non-target", "turtle", "dolphin", "seabird")),
-        ("reef_health", ("coral", "reef", "bleaching")),
+        ("habitat_health", ("habitat health", "fish habitat", "aquatic habitat", "coastal habitat", "mangrove", "estuary", "river health", "coral", "reef", "bleaching")),
         ("climate", ("climate", "warming", "temperature", "acidification")),
         ("pollution", ("pollution", "plastic", "oil spill", "wastewater", "litter")),
         ("mpa", ("marine protected", "protected area", " mpa", "no-take")),
@@ -48,10 +48,10 @@ def conservation_answer(topic: str, catches: list[dict]) -> str:
             "release, and mitigation used. Compare rates per unit of fishing effort—not raw totals—then test practical changes such as gear "
             "modification, shorter soak times, spatial/seasonal avoidance, or safe-release training. Preserve zero-catch sampling events too."
         ),
-        "reef_health": (
-            "Fish photographs can support reef monitoring when paired with repeatable sites and effort. Track species composition, size "
-            "distributions, trophic groups, habitat, and photo context across repeated surveys. Coral condition, bleaching, habitat damage, and "
-            "water-quality observations need their own standardized fields; catch photographs alone cannot measure reef health."
+        "habitat_health": (
+            "Fish photographs can support habitat monitoring when paired with repeatable sites and effort. Along Pakistan’s coast and inland "
+            "waters, track species composition, size distributions, habitat, and photo context across repeated surveys. Mangrove, estuary, "
+            "river, reservoir, coral, and water-quality observations need their own standardized fields; catch photographs alone cannot measure habitat health."
         ),
         "climate": (
             "For climate-related monitoring, repeat observations at fixed sites and seasons and pair fish records with temperature and habitat "
@@ -85,7 +85,7 @@ def conservation_answer(topic: str, catches: list[dict]) -> str:
 
 
 def conservation_welcome(catches: list[dict]) -> str:
-    return ("I can help with fisheries-conservation questions even before you save a catch. Ask about sustainable monitoring, bycatch, coral "
-            "reef pressures, protected-species handling, marine protected area study design, or how catch photographs can support management. "
+    return ("I can help with fisheries-conservation questions even before you save a catch. Ask about sustainable monitoring in Pakistan’s "
+            "coastal or Indus fisheries, bycatch, aquatic-habitat pressures, protected-species handling, or how catch photographs can support management. "
             "I will distinguish general guidance from conclusions supported by your records and will flag topics that require current local "
             f"regulations.\n\nDataset note: {_dataset_context(catches)}")

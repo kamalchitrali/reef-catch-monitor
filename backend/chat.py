@@ -13,7 +13,7 @@ from .conservation import conservation_answer, conservation_topic, conservation_
 
 RECORD_INTENTS = {"totals", "species", "sites", "habitats", "lengths", "weights", "recent", "data_quality"}
 CONSERVATION_INTENTS = {
-    "protected_species", "bycatch", "reef_health", "climate", "pollution", "mpa", "sustainable_fishing", "monitoring",
+    "protected_species", "bycatch", "habitat_health", "climate", "pollution", "mpa", "sustainable_fishing", "monitoring",
 }
 
 
@@ -248,7 +248,7 @@ def metadata(intent: str) -> tuple[str, list[str]]:
         "weights": "Calculating saved weights…", "totals": "Counting catches and specimens…",
         "recent": "Checking collection dates…", "data_quality": "Checking record completeness…",
         "guidance": "Reviewing the analysis workflow…", "protected_species": "Reviewing protected-species guidance…",
-        "bycatch": "Reviewing bycatch guidance…", "reef_health": "Reviewing reef-monitoring guidance…",
+        "bycatch": "Reviewing bycatch guidance…", "habitat_health": "Reviewing aquatic-habitat guidance…",
         "climate": "Reviewing climate-monitoring guidance…", "pollution": "Reviewing pollution guidance…",
         "mpa": "Reviewing protected-area study design…", "sustainable_fishing": "Reviewing sustainable-fisheries guidance…",
         "monitoring": "Building a monitoring answer…", "help": "Understanding your question…",
@@ -271,8 +271,8 @@ def metadata(intent: str) -> tuple[str, list[str]]:
         "guidance": ["How do I mark the ruler?", "How should I make a fish crop?"],
         "protected_species": ["How should I document bycatch?", "How can I verify species status?"],
         "bycatch": ["Which bycatch fields should I record?", "How can catch data support conservation?"],
-        "reef_health": ["How should I monitor reef fish over time?", "What can catch photos not tell me?"],
-        "monitoring": ["How can catch data support conservation?", "How should I monitor reef fish over time?"],
+        "habitat_health": ["How should I monitor fish habitats in Pakistan?", "What can catch photos not tell me?"],
+        "monitoring": ["How can catch data support conservation?", "How should I monitor fish along Pakistan’s coast?"],
     }
     defaults = ["Summarize my catches", "How can catch data support conservation?"]
     return activities.get(intent, activities["help"]), prompts.get(intent, [] if intent == "goodbye" else defaults)

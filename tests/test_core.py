@@ -62,9 +62,9 @@ def test_quality_report_and_invalid_upload(client):
     assert quality.json()["width"] == 900
     assert quality.json()["height"] == 600
     conservation = client.post("/api/chat", headers={"X-Reef-Request": "1"},
-        json={"message": "How should I monitor coral reef fish for conservation?"})
+        json={"message": "How should I monitor coastal fish habitat in Pakistan?"})
     assert conservation.status_code == 200
-    assert conservation.json()["intent"] == "reef_health"
+    assert conservation.json()["intent"] == "habitat_health"
     assert "repeatable sites" in conservation.json()["answer"]
     assert "You have no saved catches yet" not in conservation.json()["answer"]
     protected = client.post("/api/chat", headers={"X-Reef-Request": "1"},
@@ -90,9 +90,9 @@ def test_quality_report_and_invalid_upload(client):
     assert "which part" in unknown.json()["answer"]
     follow_up = client.post("/api/chat", headers={"X-Reef-Request": "1"}, json={
         "message": "Tell me more",
-        "history": [{"role": "assistant", "content": conservation.json()["answer"], "intent": "reef_health"}],
+        "history": [{"role": "assistant", "content": conservation.json()["answer"], "intent": "habitat_health"}],
     })
-    assert follow_up.json()["intent"] == "reef_health"
+    assert follow_up.json()["intent"] == "habitat_health"
     assert "repeatable sites" in follow_up.json()["answer"]
     troubleshooting = client.post("/api/chat", headers={"X-Reef-Request": "1"}, json={"message": "My upload is not working"})
     assert troubleshooting.json()["intent"] == "troubleshooting"
@@ -125,8 +125,8 @@ def test_persistence_ownership_review_and_export(client, monkeypatch):
     })
     assert changed.status_code == 200
     metadata = {
-        "collected_on": "2026-11-11", "site": "RS-01", "context": "Survey",
-        "habitat": "Marine", "water_body": "Red Sea", "gear": "visual survey",
+        "collected_on": "2026-11-11", "site": "PK-SD-01", "context": "Survey",
+        "habitat": "Marine", "water_body": "Arabian Sea", "gear": "visual survey",
         "group": "trip-01", "notes": "test record", "demo": True,
         "specimens": [{"species": "Unknown / Needs review", "calibration": None, "measured_cm": None, "weight_g": None, "crop": None}],
     }
@@ -150,16 +150,16 @@ def test_persistence_ownership_review_and_export(client, monkeypatch):
     assert annotation.status_code == 200
     assert annotation.json()["specimens"][0]["estimated_cm"] == 30.0
     reviewed = client.patch(f"/api/catches/{catch_id}/fish/1/review", headers={"X-Reef-Request": "1"},
-        json={"species": "Lutjanus bohar", "reviewed_length_cm": 31.2})
+        json={"species": "Rastrelliger kanagurta", "reviewed_length_cm": 31.2})
     assert reviewed.status_code == 200
-    assert reviewed.json()["specimens"][0]["species"] == "Lutjanus bohar"
+    assert reviewed.json()["specimens"][0]["species"] == "Rastrelliger kanagurta"
     replaced_photo = client.put(f"/api/catches/{catch_id}/photo", headers={"X-Reef-Request": "1"},
         files={"file": ("replacement.jpg", image_bytes((1000, 700), (40, 110, 160)), "image/jpeg")})
     assert replaced_photo.status_code == 200
     assert replaced_photo.json()["image_width"] == 1000
     assert replaced_photo.json()["specimens"][0]["estimated_cm"] is None
     assert replaced_photo.json()["specimens"][0]["measured_cm"] == 31.2
-    assert replaced_photo.json()["specimens"][0]["species"] == "Lutjanus bohar"
+    assert replaced_photo.json()["specimens"][0]["species"] == "Rastrelliger kanagurta"
     chat = client.post("/api/chat", headers={"X-Reef-Request": "1"}, json={"message": "How many fish have I recorded?"})
     assert chat.status_code == 200
     assert "1 fish" in chat.json()["answer"]
@@ -168,19 +168,19 @@ def test_persistence_ownership_review_and_export(client, monkeypatch):
     assert chat.json()["activity"]
     assert chat.json()["follow_ups"]
     exported = client.get("/api/export.csv").text
-    assert "Lutjanus bohar" in exported
+    assert "Rastrelliger kanagurta" in exported
     assert "demo" in exported.splitlines()[0]
     assert "review_status" in exported.splitlines()[0]
     assert ",True," in exported
 
     updated = client.patch(f"/api/catches/{catch_id}", headers={"X-Reef-Request": "1"}, json={
-        "collected_on": "2026-11-10", "site": "RS-EDITED", "context": "Fish market",
-        "habitat": "Marine", "water_body": "Red Sea", "gear": "handline", "group": "trip-02",
+        "collected_on": "2026-11-10", "site": "PK-SD-EDITED", "context": "Fish market",
+        "habitat": "Marine", "water_body": "Arabian Sea", "gear": "handline", "group": "trip-02",
         "notes": "corrected metadata", "demo": False,
     })
     assert updated.status_code == 200
-    assert updated.json()["site"] == "RS-EDITED"
-    assert updated.json()["specimens"][0]["species"] == "Lutjanus bohar"
+    assert updated.json()["site"] == "PK-SD-EDITED"
+    assert updated.json()["specimens"][0]["species"] == "Rastrelliger kanagurta"
     assert client.get(f"/api/catches/{catch_id}").json()["demo"] is False
 
     monkeypatch.setenv("REEF_DEV_SHOW_RESET_TOKEN", "1")

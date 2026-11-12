@@ -2,9 +2,15 @@
 
 [![Test and build](https://github.com/kamalchitrali/reef-catch-monitor/actions/workflows/ci.yml/badge.svg)](https://github.com/kamalchitrali/reef-catch-monitor/actions/workflows/ci.yml)
 
-A research-oriented catch-monitoring app for marine, brackish, and freshwater fisheries, with the Red Sea as an optional case study. React provides the review workspace; FastAPI validates uploads, reports capture quality, computes only calibrated lengths, and stores predictions separately from researcher reviews.
+A research-oriented catch-monitoring app for Pakistan's marine, brackish, and freshwater fisheries. It supports fieldwork along the Arabian Sea coast and across the Indus basin while remaining usable for other study areas. React provides the review workspace; FastAPI validates uploads, reports capture quality, computes only calibrated lengths, and stores predictions separately from researcher reviews.
 
 It combines photo annotation, on-image ruler calibration, researcher-reviewed species labels, private catch records, CSV export, conservation guidance, password recovery, and a transparent trainable species-classification baseline. The application avoids claiming biological accuracy until a representative held-out field dataset has been evaluated.
+
+## Pakistan fisheries focus
+
+The interface suggests Pakistani locations and a small reviewed-label vocabulary spanning marine and inland fisheries: Indian mackerel (*Rastrelliger kanagurta*), hilsa (*Tenualosa ilisha*), rohu (*Labeo rohita*), catla (*Catla catla*), and mrigal (*Cirrhinus mrigala*). These are entry suggestions only. A researcher must verify every label, and the photo model supports a species only after training and held-out evaluation on representative local images.
+
+The geographic framing follows Pakistan government material describing important coastal catches in the northern Arabian Sea and freshwater fisheries in the Indus system. See the [Ministry of Climate Change aquatic-ecosystem chapter](https://mocc.gov.pk/SiteImage/Misc/files/Chapter-04.pdf) and the [Punjab Fisheries manual](https://punjabfisheries.gov.pk/doc/fisheriesmanual.pdf).
 
 ## Screenshots
 
@@ -82,12 +88,12 @@ Create a CSV with these columns. The paths below illustrate the format and refer
 
 ```csv
 image,species,group,split
-images/fish-a1.jpg,Species A,trip-01,train
-images/fish-a2.jpg,Species A,trip-02,train
-images/fish-b1.jpg,Species B,trip-01,train
-images/fish-b2.jpg,Species B,trip-02,train
-images/fish-a3.jpg,Species A,trip-03,test
-images/fish-b3.jpg,Species B,trip-03,test
+images/mackerel-a1.jpg,Rastrelliger kanagurta,karachi-01,train
+images/mackerel-a2.jpg,Rastrelliger kanagurta,karachi-02,train
+images/rohu-b1.jpg,Labeo rohita,indus-01,train
+images/rohu-b2.jpg,Labeo rohita,indus-02,train
+images/mackerel-a3.jpg,Rastrelliger kanagurta,karachi-03,test
+images/rohu-b3.jpg,Labeo rohita,indus-03,test
 ```
 
 ```bash

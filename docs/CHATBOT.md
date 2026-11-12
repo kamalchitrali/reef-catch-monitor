@@ -21,7 +21,7 @@ Reef can summarize the signed-in account's:
 - recorded weights and recent catches; and
 - missing labels, lengths, habitats, or other data-quality gaps.
 
-It can also explain the photo workflow, including image upload, ruler calibration, snout-to-tail markers, species crops, saving records, and preparing a grouped train/test manifest for the species baseline. Its bounded conservation guidance covers monitoring design, reef health, protected-species handling, bycatch, pollution, climate pressures, marine protected areas, and sustainable fishing.
+It can also explain the photo workflow, including image upload, ruler calibration, snout-to-tail markers, species crops, saving records, and preparing a grouped train/test manifest for the species baseline. Its bounded conservation guidance covers monitoring design for Pakistan's coastal and Indus fisheries, aquatic-habitat health, protected-species handling, bycatch, pollution, climate pressures, marine protected areas, and sustainable fishing.
 
 ## Privacy and evidence boundaries
 

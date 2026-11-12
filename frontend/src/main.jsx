@@ -30,6 +30,13 @@ function Icon({ name, size = 20 }) {
 }
 
 const contextOptions = ['Landing site', 'Fish market', 'Onboard', 'Survey', 'Shore', 'Aquaculture', 'Other'];
+const pakistanSpeciesExamples = [
+  'Rastrelliger kanagurta',
+  'Tenualosa ilisha',
+  'Labeo rohita',
+  'Catla catla',
+  'Cirrhinus mrigala',
+];
 const habitatOptions = ['Freshwater', 'Brackish', 'Marine'];
 const tasks = {
   ruler: ['Mark the first ruler tick.', 'Mark the second ruler tick.'],
@@ -274,7 +281,7 @@ function Workspace({ model, onSaved, userId }) {
   const specimensHeading = useRef(null);
   const estimate = previewLength(fish, size);
   const visiblePrediction = prediction?.crop === fish.crop ? prediction.result : null;
-  const speciesOptions = [...new Set([...(model?.labels ?? []), ...(model?.observed_labels ?? [])])].sort((left, right) => left.localeCompare(right));
+  const speciesOptions = [...new Set([...(model?.labels ?? []), ...(model?.observed_labels ?? []), ...pakistanSpeciesExamples])].sort((left, right) => left.localeCompare(right));
 
   useEffect(() => () => { if (url) URL.revokeObjectURL(url); }, [url]);
   useEffect(() => { if (error) errorBox.current?.focus(); }, [error]);
@@ -565,8 +572,8 @@ function Workspace({ model, onSaved, userId }) {
               </div>
               {hasLengthInput(fish) && <button type="button" className="text-button subdued" disabled={!!working} onClick={clearLength}>Clear length calibration</button>}
               <div className="field-divider" />
-              <label>Reviewed species <input maxLength={120} list="species-labels" placeholder="Enter species or leave as Unknown" value={fish.species}
-                onChange={event => updateFish({ species: event.target.value })} /></label>
+              <label>Reviewed species <input maxLength={120} list="species-labels" placeholder="Enter a verified Pakistani fish label or leave as Unknown" value={fish.species}
+                onChange={event => updateFish({ species: event.target.value })} /><small>Suggestions are examples, not automatic identifications. Verify every label.</small></label>
               <datalist id="species-labels">{speciesOptions.map(label => <option key={label} value={label} />)}</datalist>
               {model?.model_id && <button className="button secondary small" type="button" disabled={fish.crop.length !== 2 || !!working} onClick={suggestSpecies}>Suggest from marked crop</button>}
               {visiblePrediction && <div className="suggestion"><strong>{visiblePrediction.needs_review ? 'Unknown / Needs review' : 'Model suggestion'}</strong>
@@ -592,7 +599,7 @@ function Workspace({ model, onSaved, userId }) {
           <div className="panel-heading"><div className="heading-icon"><Icon name="records" /></div>
             <div className="heading-copy"><h2 id="details-title">Collection details</h2><p>Record where and when the catch was photographed.</p></div></div>
           <div className="fields">
-            <label>Site name or code <input required maxLength={120} placeholder="e.g. SITE-01" value={details.site} onChange={event => setDetails({ ...details, site: event.target.value })} /></label>
+            <label>Site name or code <input required maxLength={120} placeholder="e.g. Karachi Harbour, Keti Bandar, or PK-01" value={details.site} onChange={event => setDetails({ ...details, site: event.target.value })} /></label>
             <div className="field-row">
               <label>Collection date <input type="date" required max={today()} value={details.collected_on} onChange={event => setDetails({ ...details, collected_on: event.target.value })} /></label>
               <label>Photo context <select value={details.context} onChange={event => setDetails({ ...details, context: event.target.value })}>{contextOptions.map(value => <option key={value}>{value}</option>)}</select></label>
@@ -601,7 +608,7 @@ function Workspace({ model, onSaved, userId }) {
               <label>Habitat <span>optional</span><select value={details.habitat} onChange={event => setDetails({ ...details, habitat: event.target.value })}>
                 <option value="">Unspecified</option>{habitatOptions.map(value => <option key={value}>{value}</option>)}
               </select></label>
-              <label>Water body <span>optional</span><input maxLength={120} placeholder="e.g. lake or bay name" value={details.water_body}
+              <label>Water body <span>optional</span><input maxLength={120} placeholder="e.g. Arabian Sea, Indus River, or Manchar Lake" value={details.water_body}
                 onChange={event => setDetails({ ...details, water_body: event.target.value })} /></label>
             </div>
             <label className="checkbox"><input type="checkbox" checked={details.demo} onChange={event => setDetails({ ...details, demo: event.target.checked })} /> Demonstration record (visibly excluded from research evidence).</label>
@@ -942,7 +949,7 @@ function Records({ latest, onNewCatch }) {
 
 const suggestedQuestions = [
   'How can catch data support conservation?',
-  'How should I monitor reef fish over time?',
+  'How should I monitor fish along Pakistan’s coast?',
   'How should protected species be documented?',
   'How many fish have I recorded?',
 ];
@@ -1408,7 +1415,7 @@ function CatchApp({ user, onUserUpdated, onAccountDeleted, onSignOut, signingOut
       <section className={`hero ${page !== 'workspace' ? 'hero-records' : ''}`}>
         <div className="hero-copy"><p className="eyebrow"><span /> FISHERIES MONITORING</p>
           <h1 ref={heading} tabIndex={-1}>{{ dashboard: 'Research dashboard', workspace: 'New catch analysis', records: 'Catch history', species: 'Species catalog', performance: 'Model performance', help: 'Fieldwork guide', account: 'Account settings', assistant: 'Catch assistant' }[page]}</h1>
-          <p>{{ dashboard: 'A transparent overview of saved observations and research readiness.', workspace: 'Measure fish from photos and record species across marine, brackish, and freshwater habitats.', records: 'Search, review, correct, and export your saved catch observations.', species: 'Browse species observed in saved catches and compare them with model identification coverage.', performance: 'Separate measured evidence from assumptions and document limitations.', help: 'Capture consistent photographs and defensible measurements.', account: 'Manage your researcher profile.', assistant: 'Explore records and prepare a species model.' }[page]}</p>
+          <p>{{ dashboard: 'A transparent overview of Pakistani fisheries observations and research readiness.', workspace: 'Measure fish from Pakistan’s marine, brackish, and freshwater habitats.', records: 'Search, review, correct, and export your saved catch observations.', species: 'Browse reviewed Pakistani fish labels and compare them with model identification coverage.', performance: 'Separate measured evidence from assumptions and document limitations.', help: 'Capture consistent photographs and defensible measurements.', account: 'Manage your researcher profile.', assistant: 'Explore records and prepare a locally trained species model.' }[page]}</p>
           {page === 'workspace' ? <p className="mode" role="status"><span />{statusError ? 'Model status unavailable' : !model ? 'Checking model…' : model.model_id ? 'Species model available' : 'Manual species review'}</p>
             : <button type="button" className="button hero-action" onClick={() => navigate('workspace')}><Icon name="image" size={17} /> Open workspace</button>}
         </div>
@@ -1501,7 +1508,7 @@ function App() {
       <section className="account-intro" aria-labelledby="intro-title">
         <p className="eyebrow"><span /> FISHERIES MONITORING</p>
         <h1 id="intro-title">Your fish catch workspace</h1>
-        <p>Measure fish from photos, record species and habitats, and keep your catch records in one place.</p>
+        <p>Measure Pakistani fish from photos, record marine and inland habitats, and keep your catch records in one place.</p>
         <ReefDiagram />
       </section>
       <div>
