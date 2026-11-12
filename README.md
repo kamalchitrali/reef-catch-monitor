@@ -142,3 +142,7 @@ Use the [deployment guide](docs/DEPLOYMENT.md) for three supported paths:
 - a DigitalOcean Droplet with DigitalOcean Managed PostgreSQL.
 
 The guide covers environment variables, frontend builds, systemd, Nginx, HTTPS, firewalls, health checks, migrations, and backups. The supplied service intentionally runs one Uvicorn worker for a small research deployment. Run migrations as a single release step before adding workers.
+
+## License
+
+This project is available under the [MIT License](LICENSE). Third-party packages and assets remain subject to their own licenses; see [third-party notices](THIRD_PARTY_NOTICES.txt).
