@@ -1,0 +1,9 @@
+{
+  "name": "reef-catch-monitor-workspace",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "test": ".venv/bin/python -m pytest"
+  }
+}
