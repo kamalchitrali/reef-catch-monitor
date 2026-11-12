@@ -5,9 +5,9 @@ After=network.target postgresql.service
 [Service]
 User=reefcatch
 Group=www-data
-WorkingDirectory=/opt/reef-catch-monitor
+WorkingDirectory=/opt/reef-catch-monitor/app
 EnvironmentFile=/etc/reef-catch-monitor.env
-ExecStart=/opt/reef-catch-monitor/.venv/bin/uvicorn backend.main:app --host 127.0.0.1 --port 8000 --proxy-headers --forwarded-allow-ips=127.0.0.1
+ExecStart=/opt/reef-catch-monitor/app/.venv/bin/uvicorn backend.main:app --host 127.0.0.1 --port 8000 --proxy-headers --forwarded-allow-ips=127.0.0.1
 Restart=on-failure
 PrivateTmp=true
 NoNewPrivileges=true

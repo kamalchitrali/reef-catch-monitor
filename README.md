@@ -6,6 +6,20 @@ A research-oriented catch-monitoring app for marine, brackish, and freshwater fi
 
 It combines photo annotation, on-image ruler calibration, researcher-reviewed species labels, private catch records, CSV export, conservation guidance, password recovery, and a transparent trainable species-classification baseline. The application avoids claiming biological accuracy until a representative held-out field dataset has been evaluated.
 
+## Screenshots
+
+| New catch analysis | Ruler and fish markers |
+| --- | --- |
+| ![New catch analysis workspace](docs/screenshots/new-catch-analysis.png) | ![Calibrated ruler and fish-length markers](docs/screenshots/ruler-and-fish-markers.png) |
+
+| Sign in | Create an account |
+| --- | --- |
+| ![Reef Catch Monitor sign-in page with demonstration credentials](docs/screenshots/sign-in.png) | ![Reef Catch Monitor account registration page](docs/screenshots/sign-up.png) |
+
+<p align="center">
+  <img src="docs/screenshots/reef-assistant.png" width="360" alt="Reef Assistant conversational panel">
+</p>
+
 ## Run the app
 
 Use Python 3.11+ and Node.js 22+. In VS Code, open the repository root and run:
@@ -28,6 +42,12 @@ SQLite is the convenient local default. Set `REEF_DATABASE_URL=postgresql://...`
 Choose **Sign up**, enter your name and email address, and choose a password of at least 15 characters. Registration signs you in. Each account can access only its own catches, photos, avatar, reviews, and CSV exports. Account settings support a profile image, display-name changes, data export, password changes that revoke other sessions, and password-confirmed permanent account deletion. Account deletion cascades to that account's catches, photos, measurements, predictions, and reviews.
 
 **Forgot password** creates a single-use token that expires after 30 minutes and invalidates existing sessions when used. Configure the `REEF_SMTP_*` and `REEF_RESET_BASE_URL` variables from `.env.example` for email delivery. Local developers may explicitly set `REEF_DEV_SHOW_RESET_TOKEN=1` to show the token in the reset form; never enable that option in production. Passwords are salted one-way hashes and can be replaced, never retrieved or displayed.
+
+## Reef Assistant chatbot
+
+Select **Ask Reef** from any signed-in page for a conversational helper with greetings, follow-up context, a visible thinking state, and suggested questions. It understands common ways of asking about catch totals, species, sites, habitats, lengths, weights, recent catches, missing data, photo measurement, model training, and fisheries-conservation monitoring.
+
+Reef is deliberately private and evidence-bounded. The server classifies the request and composes an answer from the signed-in user's own catch records or the app's reviewed guidance; it does not send conversations or catch data to an external language-model service. Record-based answers are separated from general conservation guidance, and the interface reminds users to confirm current local regulations and species assessments. It is a project assistant, not a substitute for expert identification, fisheries regulation, or scientific review. See [Chatbot design and supported questions](docs/CHATBOT.md) for details.
 
 If you already ran the single-user app, keep using the same `data/` directory and back it up before updating. The server keeps old catches in SQLite and hides unassigned records from every account. Create the account that should receive them, then run this in the project directory with the same Python environment and `REEF_DATA_DIR` as the server.
 
@@ -107,14 +127,12 @@ The tests cover calibrated arithmetic, invalid images and model files, persisten
 - Uploaded normalized images are currently stored transactionally in the database. Keep original research photos in separate versioned object storage; they are not replaced by this app.
 - Test restores regularly. Database backups without verified restore tests are not a recovery plan.
 
-## Hostinger VPS deployment
+## Deployment
 
-1. Provision Ubuntu with Python 3.11+, Node 22, PostgreSQL 16+, Nginx, and a non-login `reefcatch` service user. Clone/copy the project to `/opt/reef-catch-monitor`.
-2. Create a PostgreSQL database/user, set a strong password, and put `REEF_DATABASE_URL=postgresql://...` plus `REEF_DATA_DIR=/var/lib/reef-catch-monitor` in `/etc/reef-catch-monitor.env` readable only by the service user.
-3. Create `.venv`, install `backend/requirements.txt`, run `npm --prefix frontend ci && npm run build`, then start Uvicorn once to apply migrations.
-4. Install `deploy/reef-catch.service` under `/etc/systemd/system/`, enable it, and adapt `deploy/nginx.conf` with the real domain. Use Certbot for HTTPS before collecting credentials.
-5. Allow only SSH/HTTP/HTTPS through the firewall. PostgreSQL stays bound to localhost. Schedule encrypted `pg_dump` backups and a separate original-image backup.
+Use the [deployment guide](docs/DEPLOYMENT.md) for three supported paths:
 
-The application emits no-cache API responses, browser security headers, and HSTS when the request is recognized as HTTPS. Keep the trusted-proxy configuration from the supplied service, terminate TLS before collecting credentials, and verify `/api/health` from the local monitoring network.
+- local development or a local production-style build with SQLite;
+- AWS EC2 with Amazon RDS for PostgreSQL; or
+- a DigitalOcean Droplet with DigitalOcean Managed PostgreSQL.
 
-For multi-worker deployments, run migration startup as a single release step before increasing Uvicorn workers. The supplied service intentionally starts one worker for a small demonstration VPS.
+The guide covers environment variables, frontend builds, systemd, Nginx, HTTPS, firewalls, health checks, migrations, and backups. The supplied service intentionally runs one Uvicorn worker for a small research deployment. Run migrations as a single release step before adding workers.
