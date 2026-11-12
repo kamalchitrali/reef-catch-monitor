@@ -1,6 +1,6 @@
 # Reef Catch Monitor
 
-[![Test and build](https://github.com/shapirkhan248-spec/reef-catch-monitor/actions/workflows/ci.yml/badge.svg)](https://github.com/shapirkhan248-spec/reef-catch-monitor/actions/workflows/ci.yml)
+[![Test and build](https://github.com/kamalchitali/reef-catch-monitor/actions/workflows/ci.yml/badge.svg)](https://github.com/kamalchitali/reef-catch-monitor/actions/workflows/ci.yml)
 
 A research-oriented catch-monitoring app for marine, brackish, and freshwater fisheries, with the Red Sea as an optional case study. React provides the review workspace; FastAPI validates uploads, reports capture quality, computes only calibrated lengths, and stores predictions separately from researcher reviews.
 
